@@ -12,7 +12,7 @@ export const getAllProducts = async (req, res, next) => {
 };
 
 //Eliminar un producto
-export const deleteProduct = async (req, res, next) {
+export const deleteProduct = async (req, res, next) => {
     if(!req.user.isAdmin || req.user.id !== req.params.userId){
         return next(errorHandler(403, 'No tienes permisos para eliminar este producto'))
     }
