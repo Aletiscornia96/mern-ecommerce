@@ -20,6 +20,11 @@ const productSchema = new mongoose.Schema({
         require: true,
     },
 
+    stock: {
+        type: Number,
+        require: true,
+    },
+
     color:{
         type: String,
         required: true

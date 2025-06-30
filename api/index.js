@@ -3,9 +3,18 @@ import dotenv from 'dotenv';
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import authRoutes from './routes/auth.route.js';
-
+import productsRoutes from './routes/product.route.js';
+import orderRoutes from './routes/order.route.js';
+import cosrs from 'cors';
 
 dotenv.config();
+const app = express();
+
+//Middleware
+app.use(cosrs());
+app.use(express.json());
+app.use(cookieParser());
+app.use('/uploads', express.static('uploads'));
 
 mongoose.connect(process.env.MONGO_URL)
     .then(
@@ -14,11 +23,10 @@ mongoose.connect(process.env.MONGO_URL)
         console.log(err)
 });
 
-const app = express();
-app.use(express.json());
-app.use(cookieParser());
-
+//Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/products', productsRoutes);
+app.use('/api/orders', orderRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
