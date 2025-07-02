@@ -4,10 +4,10 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import authRoutes from './routes/auth.route.js';
 import productsRoutes from './routes/product.route.js';
-import orderRoutes from './routes/order.route.js';
+// import orderRoutes from './routes/order.route.js';
 import cosrs from 'cors';
 
-dotenv.config();
+dotenv.config({ path: './api/.env' });
 const app = express();
 
 //Middleware
@@ -26,7 +26,7 @@ mongoose.connect(process.env.MONGO_URL)
 //Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productsRoutes);
-app.use('/api/orders', orderRoutes);
+// app.use('/api/orders', orderRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
