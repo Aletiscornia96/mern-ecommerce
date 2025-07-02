@@ -8,16 +8,25 @@ import jwt from 'jsonwebtoken';
 export const signup = async (req, res, next) => {
     const { username, email, password } = req.body;
 
+    // Validar que los campos no estén vacíos y que existan
     if (!username || !email || !password || username === '' || email === '' || password === '') {
         next(errorHandler(400, 'Todos los campos son requeridos'));
     }
 
+    // Verificar si el usuario ya existe
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+        return res.status(400).json('El correo ya está en uso');
+    }    
+
+    //Encriptar la pass
     const hashedPassword = bcryptjs.hashSync(password, 10);
 
+    // Crear y guardar el nuevo usuario
     const newUser = new User({
         username,
         email,
-        password: hashedPassword
+        password: hashedPassword,
     });
 
     try {
@@ -32,7 +41,7 @@ export const signin = async (req, res, next) => {
     const { email, password } = req.body
 
     if (!email || !password || email === '' || password === '') {
-        next(errorHandler(400, 'Todos los campos son requeridos'));
+        return next(errorHandler(400, 'Todos los campos son requeridos'));
     }
 
     try {
