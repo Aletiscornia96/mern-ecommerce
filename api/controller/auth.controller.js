@@ -10,7 +10,7 @@ export const signup = async (req, res, next) => {
 
     // Validar que los campos no estén vacíos y que existan
     if (!username || !email || !password || username === '' || email === '' || password === '') {
-        next(errorHandler(400, 'Todos los campos son requeridos'));
+       return next(errorHandler(400, 'Todos los campos son requeridos'));
     }
 
     // Verificar si el usuario ya existe
@@ -31,9 +31,9 @@ export const signup = async (req, res, next) => {
 
     try {
         await newUser.save();
-        res.json('Registro exitoso');
+        return res.json('Registro exitoso');
     } catch (err) {
-        next(err);
+        return next(err);
     }
 };
 

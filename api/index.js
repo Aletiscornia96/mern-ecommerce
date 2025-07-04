@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import authRoutes from './routes/auth.route.js';
 import productsRoutes from './routes/product.route.js';
+import userRoutes from './routes/user.route.js';
 // import orderRoutes from './routes/order.route.js';
 import cosrs from 'cors';
 
@@ -26,6 +27,7 @@ mongoose.connect(process.env.MONGO_URL)
 //Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productsRoutes);
+app.use('/users', userRoutes);
 // app.use('/api/orders', orderRoutes);
 
 const PORT = process.env.PORT || 5000;
