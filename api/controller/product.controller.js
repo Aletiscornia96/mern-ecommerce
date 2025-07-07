@@ -11,6 +11,17 @@ export const getAllProducts = async (req, res, next) => {
     }
 };
 
+//Obtener un producto
+export const getProduct = async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return next(errorHandler(404, 'Producto no encontrado'));
+    res.status(200).json(product);
+  } catch (err) {
+    next(err);
+  }
+};
+
 //Eliminar un producto
 export const deleteProduct = async (req, res, next) => {
     if(!req.user.isAdmin || req.user.id !== req.params.userId){
@@ -25,7 +36,7 @@ export const deleteProduct = async (req, res, next) => {
 };
 
 //Crear un producto
-export const create = async (req, res, next) => {
+export const createProduct = async (req, res, next) => {
     if(!req.user.isAdmin){
         return next(errorHandler(403, 'No tienes permisos para crear un producto'));
     }
@@ -42,6 +53,25 @@ export const create = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
+};
+
+//Actualizar un producto
+export const updateProduct = async (req, res, next) => {
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.productId,
+      { $set: req.body },
+      { new: true }
+    );
+
+    if (!updatedProduct){
+        return next(errorHandler(404, 'Producto no encontrado'));
+    }; 
+
+    res.status(200).json(updatedProduct);
+  } catch (err) {
+    next(err);
+  }
 };
 
 

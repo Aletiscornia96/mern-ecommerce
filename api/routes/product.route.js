@@ -1,14 +1,24 @@
 import express from 'express';
-// import { verifyToken } from '../middleware/auth.middleware.js';
-import { getAllProducts, create, deleteProduct } from '../controller/product.controller.js' 
+import { 
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    getProduct,
+    getAllProducts, 
+} from '../controller/product.controller.js'
+import { verifyAdmin } from '../utils/authMiddleware.js'; 
 
 
 const router = express.Router();
 
-router.post('/create', create)
-router.get('/getallproducts', getAllProducts);
-router.delete('/deleteproduct/:productId/:userId', deleteProduct)
+router.post('/', verifyAdmin, createProduct);
+router.put('/:id', verifyAdmin, updateProduct);
+router.delete('/:id', verifyAdmin, deleteProduct);
+router.get('/:id', getProduct);
+router.get('/', getAllProducts);
 
 
 
 export default router;
+
+
