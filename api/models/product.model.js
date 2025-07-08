@@ -7,6 +7,13 @@ const productSchema = new mongoose.Schema({
         trim: true,
     },
 
+    slug: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+    },
+
     description: {
         type: String,
     },
@@ -28,8 +35,8 @@ const productSchema = new mongoose.Schema({
 
     stock: {
         type: Number,
-        require: true,
         min: 0,
+        default: 0,
     },
 
     color:{
@@ -39,7 +46,7 @@ const productSchema = new mongoose.Schema({
     productPicture: {
         type: String,
         default: 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=740'
-    }
+    },
 
 }, { timestamps: true } );
 
