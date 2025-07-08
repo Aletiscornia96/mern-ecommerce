@@ -3,7 +3,7 @@ import {
     createProduct,
     updateProduct,
     deleteProduct,
-    getProduct,
+    getOneProduct,
     getAllProducts, 
 } from '../controller/product.controller.js'
 import { verifyAdmin } from '../utils/authMiddleware.js'; 
@@ -14,7 +14,7 @@ const router = express.Router();
 router.post('/', verifyAdmin, createProduct);
 router.put('/:productId', verifyAdmin, updateProduct);
 router.delete('/:productId', verifyAdmin, deleteProduct);
-router.get('/:id', getProduct);
+router.get('/slug/:slug', getOneProduct);
 router.get('/', getAllProducts);
 
 export default router;

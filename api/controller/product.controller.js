@@ -12,9 +12,9 @@ export const getAllProducts = async (req, res, next) => {
 };
 
 //Obtener un producto
-export const getProduct = async (req, res, next) => {
+export const getOneProduct = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findOne({ slug: req.params.slug });
     if (!product) return next(errorHandler(404, 'Producto no encontrado'));
     res.status(200).json(product);
   } catch (err) {
@@ -42,7 +42,9 @@ export const createProduct = async (req, res, next) => {
     }
     const slug = req.body.name.split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9-]/g, '');
     const newProduct = new Product ({
-        ...req.body, slug, userId: req.user.id
+        ...req.body, 
+        slug, 
+        userId: req.user.id,
     });
     try {
         const saveProduct = await newProduct.save();
@@ -55,17 +57,13 @@ export const createProduct = async (req, res, next) => {
 //Actualizar un producto
 export const updateProduct = async (req, res, next) => {
   try {
-    const updatedProduct = await Product.findByIdAndUpdate(
-      req.params.productId,
-      { $set: req.body },
-      { new: true }
-    );
+    const product = await Product.findOne({ slug: req.params.slug });
 
-    if (!updatedProduct){
+    if (!product) {
         return next(errorHandler(404, 'Producto no encontrado'));
     }; 
 
-    res.status(200).json(updatedProduct);
+    res.status(200).json(product);
   } catch (err) {
     next(err);
   }
