@@ -5,7 +5,7 @@ import mongoose from "mongoose";
         ref: 'User', required: true 
     },
 
-    items: [{
+    products: [{
         productId: { 
             type: mongoose.Schema.Types.ObjectId, 
             ref: 'Product', 
@@ -14,25 +14,28 @@ import mongoose from "mongoose";
 
         quantity: { 
             type: Number, 
-            required: true 
+            required: true,
+            min: 1 
         },
 
-        price: { 
-            type: Number, 
-            required: true 
-        }
     }],
+
+    totalPrice: {
+        type: Number,
+        required: true,
+        min: 0,
+    },
 
     status:{
         type: String,
         enum: ['pendiente', 'enviado', 'completado', 'cancelado'],
-        default: 'pending'
+        default: 'pendiente',
     },
 
-    createdAt:{
-        type: Date,
-        default: Date.now
+    shippingAddress: {
+        type: String,
     }
+
 }, { timestamps: true });
 
 const Order = mongoose.model('Order', orderSchema);
