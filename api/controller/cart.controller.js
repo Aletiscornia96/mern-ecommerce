@@ -1,4 +1,5 @@
 import Cart from '../models/cart.model.js';
+import Product from '../models/product.model.js';
 import { errorHandler } from '../utils/error.js';
 
 export const getCart = async (req, res, next) => {
@@ -12,6 +13,31 @@ export const getCart = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getCartTotal = async (req, res, next) => {
+  const userId = req.user.id;
+
+  try {
+    const cart = await Cart.findOne({ userId });
+    if (!cart || cart.products.length === 0) {
+      return res.status(200).json({ total: 0 });
+    }
+
+    let total = 0;
+
+    for (const item of cart.products) {
+      const product = await Product.findById(item.productId);
+      if (product) {
+        total += product.price * item.quantity;
+      }
+    }
+
+    res.status(200).json({ total });
+  } catch (err) {
+    next(err);
+  }
+};
+
 
 export const addToCart = async (req, res, next) => {
   const userId = req.user.id;
@@ -140,29 +166,4 @@ export const clearCart = async (req, res, next) => {
   }
 };
 
-import Product from '../models/product.model.js';
-
-export const getCartTotal = async (req, res, next) => {
-  const userId = req.user.id;
-
-  try {
-    const cart = await Cart.findOne({ userId });
-    if (!cart || cart.products.length === 0) {
-      return res.status(200).json({ total: 0 });
-    }
-
-    let total = 0;
-
-    for (const item of cart.products) {
-      const product = await Product.findById(item.productId);
-      if (product) {
-        total += product.price * item.quantity;
-      }
-    }
-
-    res.status(200).json({ total });
-  } catch (err) {
-    next(err);
-  }
-};
 
