@@ -28,7 +28,7 @@ import mongoose from "mongoose";
 
     status:{
         type: String,
-        enum: ['pendiente', 'enviado', 'completado', 'cancelado'],
+        enum: ['pendiente', 'enviado', 'completado', 'cancelada'],
         default: 'pendiente',
     },
 
