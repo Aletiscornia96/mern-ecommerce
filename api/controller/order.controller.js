@@ -1,7 +1,7 @@
 import Order from '../models/order.model.js';
 import Cart from '../models/cart.model.js';
 import Product from '../models/product.model.js';
-import { errorHandler } from '../utils/error.js';
+import { errorHandler } from '../Middleware/error.js';
 
 export const createOrderFromCart = async (req, res, next) => {
     try {

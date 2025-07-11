@@ -1,5 +1,5 @@
 import Product from '../models/product.model.js'
-import { errorHandler } from '../utils/error.js'
+import { errorHandler } from '../Middleware/error.js'
 
 // Obtener todos los productos
 export const getAllProducts = async (req, res, next) => {
@@ -13,13 +13,13 @@ export const getAllProducts = async (req, res, next) => {
 
 //Obtener un producto
 export const getOneProduct = async (req, res, next) => {
-  try {
-    const product = await Product.findOne({ slug: req.params.slug });
-    if (!product) return next(errorHandler(404, 'Producto no encontrado'));
-    res.status(200).json(product);
-  } catch (err) {
-    next(err);
-  }
+    try {
+        const product = await Product.findOne({ slug: req.params.slug });
+        if (!product) return next(errorHandler(404, 'Producto no encontrado'));
+        res.status(200).json(product);
+    } catch (err) {
+        next(err);
+    }
 };
 
 //Eliminar un producto
@@ -34,16 +34,16 @@ export const deleteProduct = async (req, res, next) => {
 
 //Crear un producto
 export const createProduct = async (req, res, next) => {
-    if(!req.user.isAdmin){
+    if (!req.user.isAdmin) {
         return next(errorHandler(403, 'No tienes permisos para crear un producto'));
     }
-    if(!req.body.name || !req.body.price || !req.body.size || !req.body.color){
+    if (!req.body.name || !req.body.price || !req.body.size || !req.body.color) {
         return next(errorHandler(400, 'Ingrese los campos requeridos'))
     }
     const slug = req.body.name.split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9-]/g, '');
-    const newProduct = new Product ({
-        ...req.body, 
-        slug, 
+    const newProduct = new Product({
+        ...req.body,
+        slug,
         userId: req.user.id,
     });
     try {
@@ -56,17 +56,17 @@ export const createProduct = async (req, res, next) => {
 
 //Actualizar un producto
 export const updateProduct = async (req, res, next) => {
-  try {
-    const product = await Product.findOne({ slug: req.params.slug });
+    try {
+        const product = await Product.findOne({ slug: req.params.slug });
 
-    if (!product) {
-        return next(errorHandler(404, 'Producto no encontrado'));
-    }; 
+        if (!product) {
+            return next(errorHandler(404, 'Producto no encontrado'));
+        };
 
-    res.status(200).json(product);
-  } catch (err) {
-    next(err);
-  }
+        res.status(200).json(product);
+    } catch (err) {
+        next(err);
+    }
 };
 
 

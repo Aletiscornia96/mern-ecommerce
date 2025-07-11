@@ -1,10 +1,12 @@
-import Cart from '../models/cart.model.js';
-import Product from '../models/product.model.js';
-import { errorHandler } from '../utils/error.js';
+import Cart from "../models/cart.model.js";
+import Product from "../models/product.model.js";
+import { errorHandler } from "../Middleware/error.js";
 
 export const getCart = async (req, res, next) => {
   try {
-    const cart = await Cart.findOne({ userId: req.user.id }).populate('products.productId');
+    const cart = await Cart.findOne({ userId: req.user.id }).populate(
+      "products.productId"
+    );
     if (!cart) {
       return res.status(200).json({ products: [] }); // carrito vacío
     }
@@ -38,13 +40,12 @@ export const getCartTotal = async (req, res, next) => {
   }
 };
 
-
 export const addToCart = async (req, res, next) => {
   const userId = req.user.id;
   const { productId, quantity } = req.body;
 
   if (!productId || !quantity) {
-    return next(errorHandler(400, 'Producto y cantidad son requeridos'));
+    return next(errorHandler(400, "Producto y cantidad son requeridos"));
   }
 
   try {
@@ -54,11 +55,13 @@ export const addToCart = async (req, res, next) => {
       // Si no hay carrito, lo creamos con el producto
       cart = new Cart({
         userId,
-        products: [{ productId, quantity }]
+        products: [{ productId, quantity }],
       });
     } else {
       // Buscar si el producto ya está en el carrito
-      const existingProduct = cart.products.find(p => p.productId.toString() === productId);
+      const existingProduct = cart.products.find(
+        (p) => p.productId.toString() === productId
+      );
 
       if (existingProduct) {
         // Si ya está, sumamos la cantidad
@@ -83,7 +86,7 @@ export const removeFromCart = async (req, res, next) => {
   try {
     const cart = await Cart.findOne({ userId });
     if (!cart) {
-      return next(errorHandler(404, 'Carrito no encontrado'));
+      return next(errorHandler(404, "Carrito no encontrado"));
     }
 
     const productExists = cart.products.some(
@@ -91,7 +94,7 @@ export const removeFromCart = async (req, res, next) => {
     );
 
     if (!productExists) {
-      return next(errorHandler(404, 'Producto no está en el carrito'));
+      return next(errorHandler(404, "Producto no está en el carrito"));
     }
 
     // Filtrar el producto que se quiere eliminar
@@ -110,14 +113,14 @@ export const updateCartProduct = async (req, res, next) => {
   const userId = req.user.id;
   const { productId, quantity } = req.body;
 
-  if (!productId || typeof quantity !== 'number') {
-    return next(errorHandler(400, 'Se requieren productId y quantity válidos'));
+  if (!productId || typeof quantity !== "number") {
+    return next(errorHandler(400, "Se requieren productId y quantity válidos"));
   }
 
   try {
     const cart = await Cart.findOne({ userId });
     if (!cart) {
-      return next(errorHandler(404, 'Carrito no encontrado'));
+      return next(errorHandler(404, "Carrito no encontrado"));
     }
 
     const productIndex = cart.products.findIndex(
@@ -125,7 +128,7 @@ export const updateCartProduct = async (req, res, next) => {
     );
 
     if (productIndex === -1) {
-      return next(errorHandler(404, 'El producto no está en el carrito'));
+      return next(errorHandler(404, "El producto no está en el carrito"));
     }
 
     if (quantity === 0) {
@@ -150,7 +153,7 @@ export const clearCart = async (req, res, next) => {
     const cart = await Cart.findOne({ userId });
 
     if (!cart) {
-      return next(errorHandler(404, 'Carrito no encontrado'));
+      return next(errorHandler(404, "Carrito no encontrado"));
     }
 
     cart.products = []; // Vaciar el array
@@ -158,12 +161,10 @@ export const clearCart = async (req, res, next) => {
     const updatedCart = await cart.save();
 
     res.status(200).json({
-      message: 'Carrito vaciado correctamente',
+      message: "Carrito vaciado correctamente",
       cart: updatedCart,
     });
   } catch (err) {
     next(err);
   }
 };
-
-

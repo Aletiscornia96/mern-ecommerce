@@ -1,5 +1,5 @@
 import User from '../models/user.model.js';
-import { errorHandler } from '../utils/error.js';
+import { errorHandler } from '../Middleware/error.js';
 import bcryptjs from 'bcryptjs';
 
 export const getUserById = async (req, res, next) => {
@@ -25,7 +25,7 @@ export const updateUser = async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       { $set: rest },
-      { new: true }
+      { new: true, runValidators: true }
     ).select('-password'); // Excluimos la contraseña de la respuesta
 
     if (!updatedUser) return next(errorHandler(404, 'Usuario no encontrado'));

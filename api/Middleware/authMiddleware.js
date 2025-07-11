@@ -28,7 +28,7 @@ export const verifyUser = (req, res, next) => {
 };
 
 export const verifyAdmin = (req, res, next) => {
-  
+
   verifyToken(req, res, () => {
     if (!req.user || !req.user.isAdmin) {
       return next(errorHandler(403, 'Acceso solo para administradores'));

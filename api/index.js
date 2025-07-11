@@ -23,7 +23,7 @@ mongoose.connect(process.env.MONGO_URL)
         () => { console.log('Base de datos conectada') }
     ).catch(err => {
         console.log(err)
-});
+    });
 
 //Routes
 app.use('/api/auth', authRoutes);
@@ -35,7 +35,7 @@ app.use('/api/orders', orderRoutes);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-app.use ((err, req, res, next) => {
+app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Internal server error';
     res.status(statusCode).json({
