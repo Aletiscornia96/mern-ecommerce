@@ -10,4 +10,4 @@ router.get('/', verifyAdmin, getAllUsers);
 router.patch('/:id/promote', verifyAdmin, promoteUser);
 router.patch('/:id/demote', verifyAdmin, demoteUser)
 
-export default router;
+export default router;  
