@@ -13,13 +13,13 @@ router.post('/add', verifyToken,
         handleValidationErrors,
     ],
     addToCart);
-router.delete('/remove/:productId', verifyToken, removeFromCart);
 router.patch('/update', verifyToken,
     [
         body('quantity').notEmpty().withMessage('La cantidad es obligatoria').isInt({ min: 1 }).withMessage('La cantidad debe ser un entero mayor a 0'),
         handleValidationErrors,
     ],
     updateCartProduct);
+router.delete('/remove/:productId', verifyToken, removeFromCart);
 router.delete('/clear', verifyToken, clearCart);
 
 

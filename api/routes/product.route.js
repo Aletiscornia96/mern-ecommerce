@@ -24,6 +24,8 @@ router.post('/', verifyAdmin,
         handleValidationErrors,
     ],
     createProduct);
+router.get('/slug/:slug', getOneProduct);
+router.get('/', getAllProducts);
 router.put('/:productId', verifyAdmin,
     [
         body('name').optional().isString().withMessage('El nombre debe ser texto'),
@@ -36,8 +38,7 @@ router.put('/:productId', verifyAdmin,
     ],
     updateProduct);
 router.delete('/:productId', verifyAdmin, deleteProduct);
-router.get('/slug/:slug', getOneProduct);
-router.get('/', getAllProducts);
+
 
 
 export default router;
