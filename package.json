@@ -6,8 +6,11 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon api/index.js",
-    "test": "jest",
+    "test": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "coverage": "jest --collect-coverage"
+  },
+  "jest": {
+    "transform": {}
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +29,8 @@
     "nodemon": "^3.1.7"
   },
   "devDependencies": {
-    "jest": "^30.0.4"
+    "cross-env": "^7.0.3",
+    "jest": "^30.0.4",
+    "supertest": "^7.1.3"
   }
 }
