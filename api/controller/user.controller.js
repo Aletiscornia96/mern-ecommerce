@@ -2,6 +2,7 @@ import User from '../models/user.model.js';
 import { errorHandler } from '../Middleware/error.js';
 import bcryptjs from 'bcryptjs';
 
+
 export const getUserById = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id).select('-password'); // excluye la pass
