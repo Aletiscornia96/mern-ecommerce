@@ -25,7 +25,7 @@ router.post('/', verifyAdmin,
     createProduct);
 router.get('/slug/:slug', getOneProduct);
 router.get('/', getAllProducts);
-router.put('/:productId', verifyAdmin,
+router.patch('/:productId', verifyAdmin,
     [
         body('name').optional().isString().withMessage('El nombre debe ser texto'),
         body('price').optional().isFloat({ min: 0 }).withMessage('El precio debe ser un número positivo'),

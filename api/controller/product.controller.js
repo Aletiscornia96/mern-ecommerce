@@ -49,9 +49,9 @@ export const createProduct = async (req, res, next) => {
     try {
         const saveProduct = await newProduct.save();
         return res.status(201).json({
-                message : 'Producto creado exitosamente',
-                product : saveProduct,
-            });
+            message: 'Producto creado exitosamente',
+            product: saveProduct,
+        });
 
     } catch (error) {
         next(error)
@@ -61,15 +61,22 @@ export const createProduct = async (req, res, next) => {
 //Actualizar un producto
 export const updateProduct = async (req, res, next) => {
     try {
-        const product = await Product.findOne({ slug: req.params.slug });
+        const updatedProduct = await Product.findByIdAndUpdate(
+            req.params.productId,
+            req.body,
+            { new: true, runValidators: true }
+        );
 
-        if (!product) {
-            return next(errorHandler(404, 'Producto no encontrado'));
-        };
+        if (!updatedProduct) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
 
-        res.status(200).json(product);
-    } catch (err) {
-        next(err);
+        res.status(200).json({
+            message: 'Producto actualizado exitosamente',
+            product: updatedProduct,
+        });
+    } catch (error) {
+        next(error);
     }
 };
 
