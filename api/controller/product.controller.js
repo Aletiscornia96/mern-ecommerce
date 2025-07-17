@@ -48,7 +48,11 @@ export const createProduct = async (req, res, next) => {
     });
     try {
         const saveProduct = await newProduct.save();
-        res.status(200).json(saveProduct);
+        return res.status(201).json({
+                message : 'Producto creado exitosamente',
+                product : saveProduct,
+            });
+
     } catch (error) {
         next(error)
     }

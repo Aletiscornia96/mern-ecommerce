@@ -18,9 +18,8 @@ router.post('/', verifyAdmin,
         body('name').notEmpty().withMessage('El nombre del producto es obligatorio'),
         body('price').notEmpty().withMessage('El precio es obligatorio').isFloat({ min: 0 }).withMessage('El precio debe ser un número mayor a 0'),
         body('category').notEmpty().withMessage('La categoría es obligatoria'),
-        body('size').optional().isString().withMessage('El tamaño debe ser texto'),
         body('color').optional().isString().withMessage('El color debe ser texto'),
-        body('stock').optional().isInt({ min: 0 }).withMessage('El stock debe ser un número entero mayor a 0'),
+        body('stock').notEmpty().withMessage('El stock del producto es obligatorio').isInt({ min: 0 }).withMessage('El stock debe ser un número entero mayor a 0'),
         handleValidationErrors,
     ],
     createProduct);
@@ -38,7 +37,5 @@ router.put('/:productId', verifyAdmin,
     ],
     updateProduct);
 router.delete('/:productId', verifyAdmin, deleteProduct);
-
-
 
 export default router;
