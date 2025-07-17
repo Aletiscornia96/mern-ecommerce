@@ -67,7 +67,6 @@ describe('POST /api/auth/signin', () => {
       .send({});  // body vacío
 
     expect(res.statusCode).toBe(400);
-
     // Verificamos que venga el array de errores
     expect(res.body).toHaveProperty('errors');
     expect(Array.isArray(res.body.errors)).toBe(true);
@@ -83,6 +82,54 @@ describe('POST /api/auth/signin', () => {
     // Y opcionalmente, que success sea false
     expect(res.body).toHaveProperty('success', false);
   });
+});
 
+describe('POST /api/auth/signup', () => {
+  const newUser = {
+    username: 'nuevoUsuario',
+    email: 'nuevo@test.com',
+    password: 'ClaveSegura456',
+  };
 
+  test('debería registrar usuario exitosamente', async () => {
+    const res = await request(app)
+      .post('/api/auth/signup')
+      .send(newUser);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toBe('Registro exitoso');
+
+    const userInDB = await User.findOne({ email: newUser.email });
+    expect(userInDB).not.toBeNull();
+    expect(userInDB.username).toBe(newUser.username);
+  });
+
+  test('debería fallar si faltan campos', async () => {
+    const res = await request(app)
+      .post('/api/auth/signup')
+      .send({});
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty('errors');
+    expect(Array.isArray(res.body.errors)).toBe(true);
+    expect(res.body.errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ message: 'El nombre de usuario es obligatorio' }),
+        expect.objectContaining({ message: 'Debe ser un email válido' }),
+        expect.objectContaining({ message: 'La contraseña debe tener al menos 4 caracteres' }),
+      ])
+    );
+    expect(res.body).toHaveProperty('success', false);
+  });
+
+  test('debería fallar si el correo ya está en uso', async () => {
+    await User.create({ ...newUser, password: bcrypt.hashSync(newUser.password, 10) });
+
+    const res = await request(app)
+      .post('/api/auth/signup')
+      .send(newUser);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toBe('El correo ya está en uso');
+  });
 });
