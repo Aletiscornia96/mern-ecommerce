@@ -25,12 +25,18 @@ export const getOneProduct = async (req, res, next) => {
 //Eliminar un producto
 export const deleteProduct = async (req, res, next) => {
     try {
-        await Product.findByIdAndDelete(req.params.productId);
-        res.status(200).json('El producto fue eliminado');
+        const deletedProduct = await Product.findByIdAndDelete(req.params.productId);
+
+        if (!deletedProduct) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+
+        res.status(200).json({ message: 'Producto eliminado correctamente' });
     } catch (error) {
         next(error);
     }
 };
+
 
 //Crear un producto
 export const createProduct = async (req, res, next) => {
@@ -79,5 +85,3 @@ export const updateProduct = async (req, res, next) => {
         next(error);
     }
 };
-
-
