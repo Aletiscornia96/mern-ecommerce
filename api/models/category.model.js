@@ -8,6 +8,12 @@ const categorySchema = new mongoose.Schema({
     trim: true,
     minlength: [3, 'El nombre debe tener al menos 3 caracteres'],
   },
+  slug: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true
+  },
   description: {
     type: String,
     default: '',
