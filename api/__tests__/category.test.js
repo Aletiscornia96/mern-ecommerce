@@ -1,5 +1,3 @@
-// tests/category.test.js
-
 import mongoose from 'mongoose';
 import request from 'supertest';
 import app from '../index.js';
@@ -99,3 +97,4 @@ describe('POST /api/categories', () => {
     expect(res.body.message).toMatch(/acceso solo para administradores/i);
   });
 });
+

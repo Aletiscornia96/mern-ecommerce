@@ -45,19 +45,13 @@ export const getAllCategories = async (req, res, next) => {
     }
 };
 
-export const getCategoryById = async (req, res, next) => {
+export const getCategoryBySlug = async (req, res, next) => {
     try {
-        const { id } = req.params;
-
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return next(errorHandler(400, 'ID de categoría inválido'));
-        }
-
-        const category = await Category.findById(id);
+        const { slug } = req.params;
+        const category = await Category.findOne({ slug });
         if (!category) {
             return next(errorHandler(404, 'Categoría no encontrada'));
         }
-
         res.status(200).json({ category });
     } catch (err) {
         next(err);
@@ -66,29 +60,32 @@ export const getCategoryById = async (req, res, next) => {
 
 export const updateCategory = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        const { slug } = req.params;
         const { name, description } = req.body;
 
-        if (name && name.trim().length < 3) {
-            return next(errorHandler(400, 'El nombre de la categoría debe tener al menos 3 caracteres'));
-        }
-
-        // Verificar existencia y duplicado
-        const category = await Category.findById(id);
+        const category = await Category.findOne({ slug });
         if (!category) {
             return next(errorHandler(404, 'Categoría no encontrada'));
         }
 
-        // Por si cambia el name, verificar duplicado 
+        if (name && name.trim().length < 3) {
+            return next(
+                errorHandler(400, 'El nombre de la categoría debe tener al menos 3 caracteres')
+            );
+        }
+
+        // Verificar duplicado por nuevo name
         if (name) {
+            const newSlug = slugify(name, { lower: true, strict: true });
             const duplicate = await Category.findOne({
-                name: name.trim(),
-                _id: { $ne: id },
+                slug: newSlug,
+                _id: { $ne: category._id }
             });
             if (duplicate) {
                 return next(errorHandler(409, 'Ya existe una categoría con ese nombre'));
             }
             category.name = name.trim();
+            category.slug = newSlug;
         }
 
         if (description !== undefined) {
@@ -98,7 +95,7 @@ export const updateCategory = async (req, res, next) => {
         const updated = await category.save();
         res.status(200).json({
             message: 'Categoría actualizada correctamente',
-            category: updated,
+            category: updated
         });
     } catch (err) {
         next(err);
@@ -107,13 +104,9 @@ export const updateCategory = async (req, res, next) => {
 
 export const deleteCategory = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        const { slug } = req.params;
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return next(errorHandler(400, 'ID de categoría inválido'));
-        }
-
-        const deleted = await Category.findByIdAndDelete(id);
+        const deleted = await Category.findByIdAndDelete({ slug });
         if (!deleted) {
             return next(errorHandler(404, 'Categoría no encontrada'));
         }
@@ -125,4 +118,3 @@ export const deleteCategory = async (req, res, next) => {
         next(err);
     }
 };
-

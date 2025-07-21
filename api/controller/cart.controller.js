@@ -132,10 +132,10 @@ export const updateCartProduct = async (req, res, next) => {
     }
 
     if (quantity === 0) {
-      // 🗑️ Eliminar el producto si la cantidad es 0
+      // Eliminar el producto si la cantidad es 0
       cart.products.splice(productIndex, 1);
     } else {
-      // ✏️ Actualizar la cantidad si es > 0
+      // Actualizar la cantidad si es > 0
       cart.products[productIndex].quantity = quantity;
     }
 
